@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html
+    lang="en"
+    dir="ltr"
+>
+    <head>
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="css/main.css"/>
+
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script src="js/chessboard.js"></script>
+
+        <title>
+            Pixel Chess
+        </title>
+    </head>
+    <body>
+        <main
+            x-data="{
+                gameStarted: false,
+                howItWorksOpen: false,
+                creditsOpen: false,
+
+                startGame() {
+                    this.gameStarted = true;
+                    new Audio('audio/start-game.mp3').play();
+                }
+            }"
+            class="w-screen flex items-center justify-center"
+        >
+            <section
+                x-cloak
+                x-show="gameStarted === true"
+                x-transition
+            >
+                <div
+                    id="board"
+                    class="w-104 flex justify-center mb-5"
+                ></div>
+
+                <div
+                    x-show="$store.game.moves > 0"
+                    class="pixel-border animate smaller"
+                    @click="window.game.reset()"
+                >
+                    Resign
+                </div>
+                <div
+                    x-show="$store.game.moves === 0"
+                    class="pixel-border animate smaller"
+                    @click="window.game.reset()"
+                >
+                    Reset
+                </div>
+
+                <div
+                    class="pixel-border animate smaller"
+                    @click="window.game.flip()"
+                >
+                    Flip
+                </div>
+                <div
+                    class="pixel-border animate smaller"
+                    @click=""
+                >
+                    AI
+                </div>
+            </section>
+
+            <section
+                id="menu"
+                class="flex flex-col justify-center items-center text-center"
+                x-cloak
+                x-show="gameStarted === false"
+            >
+                <h1>
+                    Pixel Chess
+                </h1>
+
+                <div
+                    class="pixel-border animate w-60 mb-12"
+                    @click="startGame"
+                >
+                    Start
+                </div>
+
+                <div
+                    class="pixel-border animate w-60 mb-12"
+                    @click="howItWorksOpen = true"
+                >
+                    How it works
+                </div>
+
+                <div
+                    class="pixel-border animate w-60 mb-12"
+                    @click="creditsOpen = true"
+                >
+                    Credits
+                </div>
+
+            </section>
+
+            <section
+                id="how-it-works"
+                x-cloak
+                x-show="howItWorksOpen === true"
+                class="fixed top-0 left-0 w-full h-full flex items-center justify-center"
+                style="background: rgba(0,0,0,0.9)"
+            >
+                <div
+                    @click="howItWorksOpen = false"
+                    class="absolute top-0 right-0 m-5 text-white hover:text-fluorescent-blue text-3xl cursor-pointer">
+                    X
+                </div>
+
+                <div
+                    x-show="howItWorksOpen === true"
+                    x-transition
+                    class="pixel-border w-2/3 flex flex-col justify-center items-center p-5 text-center"
+                >
+                    <h2 class="text-xl text-fluorescent-blue mb-5">
+                        How it works
+                    </h2>
+                    <p class="text-xs mb-5">
+                        The engine behind Pixel Chess works much like any other traditional
+                        chess engine. Written 100% in JavaScript, the AI uses an
+                        algorithm to look a number of moves ahead and then an
+                        evaluation function to decide on the best move.
+                    </p>
+                    <p class="text-xs mb-5">
+                        This evaluation function takes into consideration a
+                        number of factors, including material value of pieces,
+                        positioning, mobility and more to weight a score towards
+                        a certain position to be played.
+                    </p>
+                    <p class="text-xs mb-5">
+                        This project was coded over roughly 2-weeks so there are
+                        many improvements that could be made to the AI. However,
+                        currently, it plays at around 1,500
+                        <a
+                            href="https://www.chess.com/terms/elo-rating-chess"
+                            class="text-phiox hover:opacity-75"
+                            target="_blank"
+                        >
+                            ELO
+                        </a>
+                        and can hold it's own playing 2,000+
+                        <a
+                            href="https://www.chess.com/terms/elo-rating-chess"
+                            class="text-phiox hover:opacity-75"
+                            target="_blank"
+                        >
+                            ELO
+                        </a>
+                        ratings.
+                    </p>
+                </div>
+            </section>
+
+            <section
+                id="credits"
+                x-cloak
+                x-show="creditsOpen === true"
+                class="fixed top-0 left-0 w-full h-full flex items-center justify-center"
+                style="background: rgba(0,0,0,0.9)"
+            >
+                <div
+                    @click="creditsOpen = false"
+                    class="absolute top-0 right-0 m-5 text-white hover:text-fluorescent-blue text-3xl cursor-pointer">
+                    X
+                </div>
+
+                <div
+                    x-show="creditsOpen === true"
+                    x-transition
+                    class="pixel-border w-2/3 flex flex-col justify-center items-center p-5 text-center"
+                >
+                    <h2 class="text-xl text-fluorescent-blue mb-5">
+                        Credits
+                    </h2>
+                    <p class="text-xs mb-10">
+                        Engine programming
+                        <a
+                            href="https://barr.media"
+                            class="text-phiox hover:opacity-75"
+                            target="_blank"
+                        >
+                            Barr Media
+                        </a>
+                    </p>
+                    <h2 class="text-xl text-fluorescent-blue mb-5">
+                        With thanks to
+                    </h2>
+                    <p class="text-xs mb-5">
+                        Legal move validation
+                        <a
+                            href="https://github.com/jhlywa/chess.js"
+                            class="text-phiox hover:opacity-75"
+                            target="_blank"
+                        >
+                            Chess.js
+                        </a>
+                    </p>
+                    <p class="text-xs mb-5">
+                        Chessboard
+                        <a
+                            href="https://chessboardjs.com/index.html"
+                            class="text-phiox hover:opacity-75"
+                            target="_blank"
+                        >
+                            chessboard.js
+                        </a>
+                    </p>
+                    <p class="text-xs mb-5">
+                        Chess piece graphics
+                        <a
+                            href="https://github.com/Ka-hu/chess-pieces#chess"
+                            class="text-phiox hover:opacity-75"
+                            target="_blank"
+                        >
+                            Ka-hu
+                        </a>
+                    </p>
+                </div>
+            </section>
+        </main>
+        <script src="js/main.js"></script>
+    </body>
+</html>
