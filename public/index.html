@@ -21,11 +21,6 @@
                 gameStarted: false,
                 howItWorksOpen: false,
                 creditsOpen: false,
-
-                startGame() {
-                    this.gameStarted = true;
-                    new Audio('audio/start-game.mp3').play();
-                }
             }"
             class="w-screen flex items-center justify-center"
         >
@@ -80,7 +75,7 @@
 
                 <div
                     class="pixel-border animate w-60 mb-12"
-                    @click="startGame"
+                    @click="gameStarted = true"
                 >
                     Start
                 </div>

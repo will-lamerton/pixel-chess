@@ -375,7 +375,6 @@ function negaMax(alpha, beta, depth) {
 
 onmessage = (e) => {
     self.chess = new Chess(e.data.originalPosition);
-
     self.lastMove = e.data.lastMove;
     self.numberOfMoves = e.data.moves;
 
@@ -387,6 +386,7 @@ onmessage = (e) => {
     self.pieceTables = PieceTables;
     self.currentMoveSet = null;
     self.allocatedSearchTime = 30000;
+
     self.searchTimeStart = 0;
 
     self.pieces = {
@@ -397,7 +397,6 @@ onmessage = (e) => {
         q: 900,
     }
 
-    self.positionsEvaluated = 0;
     self.searchTimeStart = performance.now();
 
     // Check opening book if there are still openings that could be played.

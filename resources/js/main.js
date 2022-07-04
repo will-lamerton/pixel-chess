@@ -120,6 +120,10 @@ class Game {
 
         window.game.update();
 
+        document.getElementsByClassName(`square-${source}`)[0].classList.add('highlight-white');
+        document.getElementsByClassName(`square-${target}`)[0].classList.add('highlight-white');
+
+
         window.game.ai.postMessage({
             originalPosition: window.game.chess.fen(),
             lastPlayerMove: (piece.substring(1) === 'P') ? target : piece.substring(1).toUpperCase()+target,
