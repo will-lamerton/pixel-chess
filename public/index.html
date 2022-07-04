@@ -61,6 +61,13 @@
                 >
                     AI
                 </div>
+                <div
+                    x-show="$store.game.thinking === true"
+                    x-transition
+                    class="inline-block w-24 text-xs text-fluorescent-blue"
+                >
+                    Thinking...
+                </div>
             </section>
 
             <section

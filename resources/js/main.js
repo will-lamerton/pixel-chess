@@ -124,6 +124,8 @@ class Game {
         document.getElementsByClassName(`square-${source}`)[0].classList.add('highlight-white');
         document.getElementsByClassName(`square-${target}`)[0].classList.add('highlight-white');
 
+        window.Alpine.store('game').thinking = true;
+
         window.game.ai.postMessage({
             originalPosition: window.game.chess.fen(),
             lastPlayerMove: (piece.substring(1) === 'P') ? target : piece.substring(1).toUpperCase()+target,
@@ -131,6 +133,8 @@ class Game {
         });
 
         window.game.ai.onmessage = (e) => {
+            window.Alpine.store('game').thinking = false;
+
             let move = window.game.chess.move(e.data);
 
             // Highlight move...
@@ -268,6 +272,7 @@ window.Alpine = Alpine;
 
 Alpine.store('game', {
     moves: window.game.moves,
+    thinking: false,
 })
 
 Alpine.start();
