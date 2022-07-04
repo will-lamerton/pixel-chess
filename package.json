@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "cli": "node build/cli.js",
-    "watch":  "mix watch --hot"
+    "dev": "mix watch --hot"
   },
   "author": "",
   "license": "ISC",
