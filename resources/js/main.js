@@ -120,9 +120,9 @@ class Game {
 
         window.game.update();
 
+        // Highlight move...
         document.getElementsByClassName(`square-${source}`)[0].classList.add('highlight-white');
         document.getElementsByClassName(`square-${target}`)[0].classList.add('highlight-white');
-
 
         window.game.ai.postMessage({
             originalPosition: window.game.chess.fen(),
@@ -131,6 +131,12 @@ class Game {
         });
 
         window.game.ai.onmessage = (e) => {
+            let move = window.game.chess.move(e.data);
+
+            // Highlight move...
+            document.getElementsByClassName(`square-${move.from}`)[0].classList.add('highlight-black');
+            document.getElementsByClassName(`square-${move.to}`)[0].classList.add('highlight-black');
+
             window.game.chess.move(e.data);
             window.game.board.position(window.game.chess.fen());
             window.game.update();

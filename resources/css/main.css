@@ -119,8 +119,8 @@ h2 {
 }
 
 .highlight-white {
-  box-shadow: inset 0 0 3px 3px yellow;
+  box-shadow: inset 0 0 3px 3px #FFFD98;
 }
 .highlight-black {
-  box-shadow: inset 0 0 3px 3px blue;
+  box-shadow: inset 0 0 3px 3px #1B98E0;
 }
