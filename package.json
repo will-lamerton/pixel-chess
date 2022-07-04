@@ -5,7 +5,8 @@
   "main": "public/js/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "cli": "node build/cli.js"
+    "cli": "node build/cli.js",
+    "dev": "mix watch --hot"
   },
   "author": "",
   "license": "ISC",
