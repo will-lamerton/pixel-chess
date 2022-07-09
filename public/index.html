@@ -21,6 +21,13 @@
                 gameStarted: false,
                 howItWorksOpen: false,
                 creditsOpen: false,
+
+                menuSound: new Audio('audio/start-game.mp3'),
+
+                startGame() {
+                    this.gameStarted = true;
+                    this.menuSound.play();
+                }
             }"
             class="w-screen flex items-center justify-center"
         >
@@ -82,7 +89,7 @@
 
                 <div
                     class="pixel-border animate w-60 mb-12"
-                    @click="gameStarted = true"
+                    @click="startGame"
                 >
                     Start
                 </div>
@@ -222,6 +229,16 @@
                             target="_blank"
                         >
                             Ka-hu
+                        </a>
+                    </p>
+                    <p class="text-xs mb-5">
+                        "Start Game" Sound
+                        <a
+                            href="https://www.youtube.com/channel/UCXp9TBuVOD1SFfFfqRTjdow"
+                            class="text-phiox hover:opacity-75"
+                            target="_blank"
+                        >
+                            LT Sound Effects
                         </a>
                     </p>
                 </div>

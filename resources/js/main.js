@@ -148,27 +148,6 @@ class Game {
     }
 
     /**
-     * API extension method to set the turn of Chess.js by passing a color.
-     * @param {string} color - either `w` or `b`.
-     * @return {void}
-     */
-    setTurn(color) {
-        let tokens = window.game.chess.fen().split(' ');
-        tokens[1] = color;
-        window.game.chess.load(tokens.join(' '));
-    }
-
-    /**
-     * Method to set a custom FEN for the board.
-     * @param {[type]} fen  [description]
-     */
-    setCustomFen(fen) {
-        window.game.chess.reset();
-        window.game.chess.load(fen);
-        window.game.update(fen);
-    }
-
-    /**
      * Method to flip the game board. Does not change color playing.
      * @return {void}
      */
@@ -190,57 +169,6 @@ class Game {
                 window.game.update();
             }
         }
-    }
-
-    /**
-     * API extension to get the long hand version of the current players turn
-     * color.
-     * @return {string}
-     */
-    getTurnColorLong() {
-        return (window.game.chess.turn() === 'w') ? 'white' : 'black';
-    }
-
-    /**
-     * Method to get King positions on the board.
-     * @param {array|undefined} board – optional board array to save time calculating.
-     * @return {object}
-     */
-    getKingPositions(board = undefined) {
-        board = (board === undefined) ? window.game.chess.board() : board;
-
-        let whiteKingSquare = null;
-        let blackKingSquare = null;
-
-        for (let rank in board) {
-            for (let square in board[rank]) {
-                if (board[rank][square] === null) {
-                    continue;
-                }
-
-                if (
-                    board[rank][square]['color'] === 'w' &&
-                    board[rank][square]['type'] === 'k' &&
-                    whiteKingSquare === null
-                ) {
-                    whiteKingSquare = board[rank][square]['square'];
-                    continue;
-                }
-                else if (
-                    board[rank][square]['color'] === 'b' &&
-                    board[rank][square]['type'] === 'k' &&
-                    blackKingSquare === null
-                ) {
-                    blackKingSquare = board[rank][square]['square'];
-                    continue;
-                }
-            }
-        }
-
-        return {
-            whiteKingSquare: whiteKingSquare,
-            blackKingSquare: blackKingSquare
-        };
     }
 
     /**
