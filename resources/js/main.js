@@ -141,7 +141,6 @@ class Game {
             document.getElementsByClassName(`square-${move.from}`)[0].classList.add('highlight-black');
             document.getElementsByClassName(`square-${move.to}`)[0].classList.add('highlight-black');
 
-            window.game.chess.move(e.data);
             window.game.board.position(window.game.chess.fen());
             window.game.update();
         }
