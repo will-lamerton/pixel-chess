@@ -120,6 +120,9 @@ class Game {
 
         window.game.update();
 
+        // If capture, we need to update the UI.
+        window.game.logCapture(move);
+
         // Highlight move...
         document.getElementsByClassName(`square-${source}`)[0].classList.add('highlight-white');
         document.getElementsByClassName(`square-${target}`)[0].classList.add('highlight-white');
@@ -136,6 +139,9 @@ class Game {
             window.Alpine.store('game').thinking = false;
 
             let move = window.game.chess.move(e.data);
+
+            // If capture, we need to update the UI.
+            window.game.logCapture(move);
 
             // Highlight move...
             document.getElementsByClassName(`square-${move.from}`)[0].classList.add('highlight-black');
@@ -171,6 +177,24 @@ class Game {
     }
 
     /**
+     * Method to log a capture on the board and update the UI.
+     * @param {object} move - move object from Chess.js
+     * @return {void}
+     */
+    logCapture(move) {
+        // If no capture, return.
+        if (move.captured === undefined) {
+            return;
+        }
+
+        // If there was a capture, which side has the captured piece.
+        let capturedPlayer = (move.color === 'w') ? 'b' : 'w';
+
+        // Log capture in store so UI can update.
+        window.Alpine.store('game').captures[capturedPlayer][move.captured]++;
+    }
+
+    /**
      * Method to reset the game and the various packages.
      * @return {void}
      */
@@ -186,6 +210,22 @@ class Game {
 
         window.game.moves = 0;
         window.Alpine.store('game').moves = 0;
+        window.Alpine.store('game').captures = {
+            w: {
+                p: 0,
+                n: 0,
+                b: 0,
+                r: 0,
+                q: 0,
+            },
+            b: {
+                p: 0,
+                n: 0,
+                b: 0,
+                r: 0,
+                q: 0,
+            },
+        }
 
         window.game.playingAs = 'w';
         window.game.lastPlayerMove = undefined;
@@ -200,6 +240,22 @@ window.Alpine = Alpine;
 Alpine.store('game', {
     moves: window.game.moves,
     thinking: false,
+    captures: {
+        w: {
+            p: 0,
+            n: 0,
+            b: 0,
+            r: 0,
+            q: 0,
+        },
+        b: {
+            p: 0,
+            n: 0,
+            b: 0,
+            r: 0,
+            q: 0,
+        },
+    }
 })
 
 Alpine.start();
