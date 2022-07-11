@@ -21,13 +21,6 @@
                 gameStarted: false,
                 howItWorksOpen: false,
                 creditsOpen: false,
-
-                menuSound: new Audio('audio/start-game.mp3'),
-
-                startGame() {
-                    this.gameStarted = true;
-                    this.menuSound.play();
-                }
             }"
             class="w-screen flex items-center justify-center"
         >
@@ -89,7 +82,7 @@
 
                 <div
                     class="pixel-border animate w-60 mb-12"
-                    @click="startGame"
+                    @click="gameStarted = true"
                 >
                     Start
                 </div>
@@ -146,23 +139,14 @@
                     <p class="text-xs mb-5">
                         This project was coded over roughly 2-weeks so there are
                         many improvements that could be made to the AI. However,
-                        currently, it plays at around 1,500
+                        currently, it plays at around 2,000
                         <a
                             href="https://www.chess.com/terms/elo-rating-chess"
                             class="text-phiox hover:opacity-75"
                             target="_blank"
                         >
-                            ELO
+                            ELO.
                         </a>
-                        and can hold it's own playing 2,000+
-                        <a
-                            href="https://www.chess.com/terms/elo-rating-chess"
-                            class="text-phiox hover:opacity-75"
-                            target="_blank"
-                        >
-                            ELO
-                        </a>
-                        ratings.
                     </p>
                 </div>
             </section>
@@ -229,16 +213,6 @@
                             target="_blank"
                         >
                             Ka-hu
-                        </a>
-                    </p>
-                    <p class="text-xs mb-5">
-                        "Start Game" Sound
-                        <a
-                            href="https://www.youtube.com/channel/UCXp9TBuVOD1SFfFfqRTjdow"
-                            class="text-phiox hover:opacity-75"
-                            target="_blank"
-                        >
-                            LT Sound Effects
                         </a>
                     </p>
                 </div>
