@@ -135,6 +135,7 @@ class Game {
             numberOfMoves: window.game.moves,
         });
 
+        // Method to await engine worker response.
         window.game.ai.onmessage = (e) => {
             window.Alpine.store('game').thinking = false;
 
@@ -142,6 +143,34 @@ class Game {
 
             // If capture, we need to update the UI.
             window.game.logCapture(move);
+
+            // If in check, highlight kings square red.
+            if (window.game.chess.in_check() === true) {
+                let board = window.game.chess.board();
+
+                for (let rank in board) {
+                    for (let square in board[rank]) {
+                        if (board[rank][square] === null) {
+                            continue;
+                        }
+
+                        if (
+                            board[rank][square]['color'] === 'w' &&
+                            board[rank][square]['type'] === 'k' &&
+                            window.game.playingAs === 'w'
+                        ) {
+                            document.getElementsByClassName(`square-${board[rank][square]['square']}`)[0].classList.add('highlight-check');
+                        }
+                        else if (
+                            board[rank][square]['color'] === 'b' &&
+                            board[rank][square]['type'] === 'k' &&
+                            window.game.playingAs === 'b'
+                        ) {
+                            document.getElementsByClassName(`square-${board[rank][square]['square']}`)[0].classList.add('highlight-check');
+                        }
+                    }
+                }
+            }
 
             // Highlight move...
             document.getElementsByClassName(`square-${move.from}`)[0].classList.add('highlight-black');

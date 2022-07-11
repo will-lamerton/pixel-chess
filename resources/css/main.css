@@ -124,3 +124,6 @@ h2 {
 .highlight-black {
   box-shadow: inset 0 0 3px 3px #1B98E0;
 }
+.highlight-check {
+    box-shadow: inset 0px 0px 20px 5px red;
+}
