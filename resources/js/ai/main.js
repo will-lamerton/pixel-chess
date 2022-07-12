@@ -22,7 +22,7 @@ function orderMoves(moves, justCaptures = false) {
 
     // Loop through all moves and score them based on how good they are
     // as an assumption.
-    for (let i in moves) {
+    for (let i=0; i<moves.length; i++) {
         // 0 by default if there's nothing special about them.
         let moveScore = 0;
 
@@ -58,7 +58,7 @@ function orderMoves(moves, justCaptures = false) {
     });
 
     // Remove scores and just get the move order to be evaluated.
-    for (let i in movesScoredAndOrdered) {
+    for (let i=0; i<movesScoredAndOrdered.length; i++) {
         movesOrdered.push(movesScoredAndOrdered[i][0]['san']);
     }
 
@@ -81,11 +81,9 @@ function calculateMaterialValue(board = undefined) {
 
     let whiteMaterialValue = 0;
     let blackMaterialValue = 0;
-    let whiteNumberOfPieces = 0;
-    let blackNumberOfPieces = 0;
 
-    for (let rank in board) {
-        for (let square in board[rank]) {
+    for (let rank=0; rank<board.length; rank++) {
+        for (let square=0; square<board[rank].length; square++) {
 
             if (board[rank][square] === null) {
                 continue;
@@ -102,8 +100,6 @@ function calculateMaterialValue(board = undefined) {
                             (board[rank][square]['square'][1]-1)
                         ];
 
-                        whiteNumberOfPieces++;
-
                         break;
 
                     case 'n':
@@ -114,8 +110,6 @@ function calculateMaterialValue(board = undefined) {
                         ][
                             (board[rank][square]['square'][1]-1)
                         ];
-
-                        whiteNumberOfPieces++;
 
                         break;
 
@@ -128,8 +122,6 @@ function calculateMaterialValue(board = undefined) {
                             (board[rank][square]['square'][1]-1)
                         ];
 
-                        whiteNumberOfPieces++;
-
                         break;
 
                     case 'r':
@@ -140,8 +132,6 @@ function calculateMaterialValue(board = undefined) {
                         ][
                             (board[rank][square]['square'][1]-1)
                         ];
-
-                        whiteNumberOfPieces++;
 
                         break;
 
@@ -154,8 +144,6 @@ function calculateMaterialValue(board = undefined) {
                             (board[rank][square]['square'][1]-1)
                         ];
 
-                        whiteNumberOfPieces++;
-
                         break;
 
                     case 'k':
@@ -164,8 +152,6 @@ function calculateMaterialValue(board = undefined) {
                         ][
                             (board[rank][square]['square'][1]-1)
                         ];
-
-                        whiteNumberOfPieces++;
 
                         break;
                 }
@@ -181,8 +167,6 @@ function calculateMaterialValue(board = undefined) {
                             (board[rank][square]['square'][1]-1)
                         ];
 
-                        blackNumberOfPieces++;
-
                         break;
 
                     case 'n':
@@ -193,8 +177,6 @@ function calculateMaterialValue(board = undefined) {
                         ][
                             (board[rank][square]['square'][1]-1)
                         ];
-
-                        blackNumberOfPieces++
 
                         break;
 
@@ -207,8 +189,6 @@ function calculateMaterialValue(board = undefined) {
                             (board[rank][square]['square'][1]-1)
                         ];
 
-                        blackNumberOfPieces++;
-
                         break;
 
                     case 'r':
@@ -219,8 +199,6 @@ function calculateMaterialValue(board = undefined) {
                         ][
                             (board[rank][square]['square'][1]-1)
                         ];
-
-                        blackNumberOfPieces++;
 
                         break;
 
@@ -233,8 +211,6 @@ function calculateMaterialValue(board = undefined) {
                             (board[rank][square]['square'][1]-1)
                         ];
 
-                        blackNumberOfPieces++;
-
                         break;
 
                     case 'k':
@@ -243,7 +219,6 @@ function calculateMaterialValue(board = undefined) {
                         ][
                             (board[rank][square]['square'][1]-1)
                         ];
-                        blackNumberOfPieces++;
 
                         break;
                 }
@@ -254,11 +229,9 @@ function calculateMaterialValue(board = undefined) {
     return {
         white: {
             materialValue: whiteMaterialValue,
-            numberOfPieces: whiteNumberOfPieces,
         },
         black: {
             materialValue: blackMaterialValue,
-            numberOfPieces: blackNumberOfPieces,
         },
     }
 }
@@ -310,7 +283,7 @@ function searchAllCaptures(alpha, beta) {
     self.currentMoveSet = moves;
     moves = orderMoves(moves, true);
 
-    for (let i in moves) {
+    for (let i=0; i<moves.length; i++) {
         self.chess.move(moves[i]);
         let newScore = -searchAllCaptures(-beta, -alpha);
         self.chess.undo();
@@ -357,7 +330,7 @@ function negaMax(alpha, beta, depth) {
         return 0;
     }
 
-    for (let i in moves) {
+    for (let i=0; i<moves.length; i++) {
         self.chess.move(moves[i]);
         let newScore = -negaMax(-beta, -alpha, depth-1);
         self.chess.undo();
@@ -412,7 +385,7 @@ onmessage = (e) => {
 
         let playableOpenings = [];
 
-        for (let opening in self.openings) {
+        for (let opening=0; opening<self.openings.length; opening++) {
             let openingExploded = self.openings[opening].split(' ');
 
             if (self.numberOfMoves === 0) {
@@ -440,11 +413,7 @@ onmessage = (e) => {
     if (currentBestMove === undefined) {
         let currentBestScore = -Infinity;
 
-        if (moves.length === 0) {
-            return;
-        }
-
-        for (let i in moves) {
+        for (let i=0; i<moves.length; i++) {
             self.chess.move(moves[i]);
             let newScore = -negaMax(self.alpha, self.beta, self.searchDepth);
             self.chess.undo();
