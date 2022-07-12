@@ -173,6 +173,65 @@
             </section>
 
             <section
+                id="endgame-screen"
+                x-cloak
+                x-show="
+                    $store.game.inCheckmate === true ||
+                    $store.game.inStalemate === true ||
+                    $store.game.inDraw === true ||
+                    $store.game.insufficientMaterial === true ||
+                    $store.game.inThreefoldRepetition === true
+                "
+                class="fixed top-0 left-0 w-full h-full flex items-center justify-center"
+                style="background: rgba(0,0,0,0.4)"
+            >
+                <div
+                    x-show="
+                        $store.game.inCheckmate === true ||
+                        $store.game.inStalemate === true ||
+                        $store.game.inDraw === true ||
+                        $store.game.insufficientMaterial === true ||
+                        $store.game.inThreefoldRepetition === true
+                    "
+                    x-transition
+                    class="pixel-border w-1/4 flex flex-col justify-center items-center p-5 text-center"
+                >
+                    <template x-if="$store.game.inCheckmate === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Checkmate!
+                        </h2>
+                    </template>
+                    <template x-if="$store.game.inStalemate === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Stalemate...
+                        </h2>
+                    </template>
+                    <template x-if="$store.game.inDraw === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Draw
+                        </h2>
+                    </template>
+                    <template x-if="$store.game.insufficientMaterial === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Draw by insufficient material
+                        </h2>
+                    </template>
+                    <template x-if="$store.game.inThreefoldRepetition === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Draw by repetition
+                        </h2>
+                    </template>
+
+                    <div
+                        class="pixel-border animate smaller"
+                        @click="window.game.reset()"
+                    >
+                        Restart
+                    </div>
+                </div>
+            </section>
+
+            <section
                 id="menu"
                 class="flex flex-col justify-center items-center text-center"
                 x-cloak

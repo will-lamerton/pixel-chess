@@ -123,6 +123,9 @@ class Game {
         // If capture, we need to update the UI.
         window.game.logCapture(move);
 
+        // Check for game ends.
+        window.game.hasGameEnded();
+
         // Highlight move...
         document.getElementsByClassName(`square-${source}`)[0].classList.add('highlight-white');
         document.getElementsByClassName(`square-${target}`)[0].classList.add('highlight-white');
@@ -154,6 +157,7 @@ class Game {
                             continue;
                         }
 
+                        // If playing white.
                         if (
                             board[rank][square]['color'] === 'w' &&
                             board[rank][square]['type'] === 'k' &&
@@ -161,6 +165,7 @@ class Game {
                         ) {
                             document.getElementsByClassName(`square-${board[rank][square]['square']}`)[0].classList.add('highlight-check');
                         }
+                        // If playing black.
                         else if (
                             board[rank][square]['color'] === 'b' &&
                             board[rank][square]['type'] === 'k' &&
@@ -171,6 +176,9 @@ class Game {
                     }
                 }
             }
+
+            // Check for game ends.
+            window.game.hasGameEnded();
 
             // Highlight move...
             document.getElementsByClassName(`square-${move.from}`)[0].classList.add('highlight-black');
@@ -224,6 +232,35 @@ class Game {
     }
 
     /**
+     * Method to detect if the game has ended via.
+     * - Checkmate
+     * - Stalemate
+     * - Draw by 50-move rule
+     * - Draw by insufficient material
+     * - Draw by threefold repetition
+     *
+     * Before updating the store to update the UI.
+     * @return {void}
+     */
+    hasGameEnded() {
+        if (window.game.chess.in_checkmate() === true) {
+            window.Alpine.store('game').inCheckmate = true;
+        }
+        else if (window.game.chess.in_stalemate() === true) {
+            window.Alpine.store('game').inStalemate = true;
+        }
+        else if (window.game.chess.insufficient_material() === true) {
+            window.Alpine.store('game').insufficientMaterial = true;
+        }
+        else if (window.game.chess.in_draw() === true) {
+            window.Alpine.store('game').inDraw = true;
+        }
+        else if (window.game.chess.in_threefold_repetition() === true) {
+            window.Alpine.store('game').inThreefoldRepetition = true;
+        }
+    }
+
+    /**
      * Method to reset the game and the various packages.
      * @return {void}
      */
@@ -255,6 +292,11 @@ class Game {
                 q: 0,
             },
         }
+        window.Alpine.store('game').inCheckmate = false;
+        window.Alpine.store('game').inStalemate = false;
+        window.Alpine.store('game').inDraw = false;
+        window.Alpine.store('game').inThreefoldRepetition = false;
+        window.Alpine.store('game').insufficientMaterial = false;
 
         window.game.playingAs = 'w';
         window.game.lastPlayerMove = undefined;
@@ -269,6 +311,7 @@ window.Alpine = Alpine;
 Alpine.store('game', {
     moves: window.game.moves,
     thinking: false,
+
     captures: {
         w: {
             p: 0,
@@ -284,7 +327,13 @@ Alpine.store('game', {
             r: 0,
             q: 0,
         },
-    }
+    },
+
+    inCheckmate: false,
+    inStalemate: false,
+    inDraw: false,
+    inThreefoldRepetition: false,
+    insufficientMaterial: false,
 })
 
 Alpine.start();
