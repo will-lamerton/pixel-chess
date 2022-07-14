@@ -120,9 +120,17 @@ class Game {
 
         window.game.update();
 
+        // If capture, we need to update the UI.
+        window.game.logCapture(move);
+
+        // Check for game ends.
+        window.game.hasGameEnded();
+
         // Highlight move...
         document.getElementsByClassName(`square-${source}`)[0].classList.add('highlight-white');
         document.getElementsByClassName(`square-${target}`)[0].classList.add('highlight-white');
+
+        window.Alpine.store('game').thinking = true;
 
         window.game.ai.postMessage({
             originalPosition: window.game.chess.fen(),
@@ -130,38 +138,55 @@ class Game {
             numberOfMoves: window.game.moves,
         });
 
+        // Method to await engine worker response.
         window.game.ai.onmessage = (e) => {
+            window.Alpine.store('game').thinking = false;
+
             let move = window.game.chess.move(e.data);
+
+            // If capture, we need to update the UI.
+            window.game.logCapture(move);
+
+            // If in check, highlight kings square red.
+            if (window.game.chess.in_check() === true) {
+                let board = window.game.chess.board();
+
+                for (let rank in board) {
+                    for (let square in board[rank]) {
+                        if (board[rank][square] === null) {
+                            continue;
+                        }
+
+                        // If playing white.
+                        if (
+                            board[rank][square]['color'] === 'w' &&
+                            board[rank][square]['type'] === 'k' &&
+                            window.game.playingAs === 'w'
+                        ) {
+                            document.getElementsByClassName(`square-${board[rank][square]['square']}`)[0].classList.add('highlight-check');
+                        }
+                        // If playing black.
+                        else if (
+                            board[rank][square]['color'] === 'b' &&
+                            board[rank][square]['type'] === 'k' &&
+                            window.game.playingAs === 'b'
+                        ) {
+                            document.getElementsByClassName(`square-${board[rank][square]['square']}`)[0].classList.add('highlight-check');
+                        }
+                    }
+                }
+            }
+
+            // Check for game ends.
+            window.game.hasGameEnded();
 
             // Highlight move...
             document.getElementsByClassName(`square-${move.from}`)[0].classList.add('highlight-black');
             document.getElementsByClassName(`square-${move.to}`)[0].classList.add('highlight-black');
 
-            window.game.chess.move(e.data);
             window.game.board.position(window.game.chess.fen());
             window.game.update();
         }
-    }
-
-    /**
-     * API extension method to set the turn of Chess.js by passing a color.
-     * @param {string} color - either `w` or `b`.
-     * @return {void}
-     */
-    setTurn(color) {
-        let tokens = window.game.chess.fen().split(' ');
-        tokens[1] = color;
-        window.game.chess.load(tokens.join(' '));
-    }
-
-    /**
-     * Method to set a custom FEN for the board.
-     * @param {[type]} fen  [description]
-     */
-    setCustomFen(fen) {
-        window.game.chess.reset();
-        window.game.chess.load(fen);
-        window.game.update(fen);
     }
 
     /**
@@ -189,54 +214,50 @@ class Game {
     }
 
     /**
-     * API extension to get the long hand version of the current players turn
-     * color.
-     * @return {string}
+     * Method to log a capture on the board and update the UI.
+     * @param {object} move - move object from Chess.js
+     * @return {void}
      */
-    getTurnColorLong() {
-        return (window.game.chess.turn() === 'w') ? 'white' : 'black';
+    logCapture(move) {
+        // If no capture, return.
+        if (move.captured === undefined) {
+            return;
+        }
+
+        // If there was a capture, which side has the captured piece.
+        let capturedPlayer = (move.color === 'w') ? 'b' : 'w';
+
+        // Log capture in store so UI can update.
+        window.Alpine.store('game').captures[capturedPlayer][move.captured]++;
     }
 
     /**
-     * Method to get King positions on the board.
-     * @param {array|undefined} board – optional board array to save time calculating.
-     * @return {object}
+     * Method to detect if the game has ended via.
+     * - Checkmate
+     * - Stalemate
+     * - Draw by 50-move rule
+     * - Draw by insufficient material
+     * - Draw by threefold repetition
+     *
+     * Before updating the store to update the UI.
+     * @return {void}
      */
-    getKingPositions(board = undefined) {
-        board = (board === undefined) ? window.game.chess.board() : board;
-
-        let whiteKingSquare = null;
-        let blackKingSquare = null;
-
-        for (let rank in board) {
-            for (let square in board[rank]) {
-                if (board[rank][square] === null) {
-                    continue;
-                }
-
-                if (
-                    board[rank][square]['color'] === 'w' &&
-                    board[rank][square]['type'] === 'k' &&
-                    whiteKingSquare === null
-                ) {
-                    whiteKingSquare = board[rank][square]['square'];
-                    continue;
-                }
-                else if (
-                    board[rank][square]['color'] === 'b' &&
-                    board[rank][square]['type'] === 'k' &&
-                    blackKingSquare === null
-                ) {
-                    blackKingSquare = board[rank][square]['square'];
-                    continue;
-                }
-            }
+    hasGameEnded() {
+        if (window.game.chess.in_checkmate() === true) {
+            window.Alpine.store('game').inCheckmate = true;
         }
-
-        return {
-            whiteKingSquare: whiteKingSquare,
-            blackKingSquare: blackKingSquare
-        };
+        else if (window.game.chess.in_stalemate() === true) {
+            window.Alpine.store('game').inStalemate = true;
+        }
+        else if (window.game.chess.insufficient_material() === true) {
+            window.Alpine.store('game').insufficientMaterial = true;
+        }
+        else if (window.game.chess.in_draw() === true) {
+            window.Alpine.store('game').inDraw = true;
+        }
+        else if (window.game.chess.in_threefold_repetition() === true) {
+            window.Alpine.store('game').inThreefoldRepetition = true;
+        }
     }
 
     /**
@@ -255,6 +276,27 @@ class Game {
 
         window.game.moves = 0;
         window.Alpine.store('game').moves = 0;
+        window.Alpine.store('game').captures = {
+            w: {
+                p: 0,
+                n: 0,
+                b: 0,
+                r: 0,
+                q: 0,
+            },
+            b: {
+                p: 0,
+                n: 0,
+                b: 0,
+                r: 0,
+                q: 0,
+            },
+        }
+        window.Alpine.store('game').inCheckmate = false;
+        window.Alpine.store('game').inStalemate = false;
+        window.Alpine.store('game').inDraw = false;
+        window.Alpine.store('game').inThreefoldRepetition = false;
+        window.Alpine.store('game').insufficientMaterial = false;
 
         window.game.playingAs = 'w';
         window.game.lastPlayerMove = undefined;
@@ -268,6 +310,30 @@ window.Alpine = Alpine;
 
 Alpine.store('game', {
     moves: window.game.moves,
+    thinking: false,
+
+    captures: {
+        w: {
+            p: 0,
+            n: 0,
+            b: 0,
+            r: 0,
+            q: 0,
+        },
+        b: {
+            p: 0,
+            n: 0,
+            b: 0,
+            r: 0,
+            q: 0,
+        },
+    },
+
+    inCheckmate: false,
+    inStalemate: false,
+    inDraw: false,
+    inThreefoldRepetition: false,
+    insufficientMaterial: false,
 })
 
 Alpine.start();

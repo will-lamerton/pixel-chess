@@ -29,37 +29,205 @@
                 x-show="gameStarted === true"
                 x-transition
             >
-                <div
-                    id="board"
-                    class="w-104 flex justify-center mb-5"
-                ></div>
 
-                <div
-                    x-show="$store.game.moves > 0"
-                    class="pixel-border animate smaller"
-                    @click="window.game.reset()"
-                >
-                    Resign
-                </div>
-                <div
-                    x-show="$store.game.moves === 0"
-                    class="pixel-border animate smaller"
-                    @click="window.game.reset()"
-                >
-                    Reset
+                <div class="flex flex-row items-center justify-center">
+                    <div class="w-64 flex flex-col items-end">
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.w.p">
+                                <img
+                                    src="/img/chesspieces/retro/wP.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.w.n">
+                                <img
+                                    src="/img/chesspieces/retro/wN.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.w.b">
+                                <img
+                                    src="/img/chesspieces/retro/wB.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.w.r">
+                                <img
+                                    src="/img/chesspieces/retro/wR.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.w.q">
+                                <img
+                                    src="/img/chesspieces/retro/wQ.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                    </div>
+
+                    <div
+                        id="board"
+                        class="w-104 flex justify-center mb-5"
+                    ></div>
+
+                    <div class="w-64">
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.b.p">
+                                <img
+                                    src="/img/chesspieces/retro/bP.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.b.n">
+                                <img
+                                    src="/img/chesspieces/retro/bN.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.b.b">
+                                <img
+                                    src="/img/chesspieces/retro/bB.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.b.r">
+                                <img
+                                    src="/img/chesspieces/retro/bR.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                        <div class="flex flex-row">
+                            <template x-for="(capture, index) in $store.game.captures.b.q">
+                                <img
+                                    src="/img/chesspieces/retro/bQ.svg"
+                                    width="30px"
+                                    :class="index !== 0 ? '-ml-5' : ''"
+                                />
+                            </template>
+                        </div>
+                    </div>
                 </div>
 
-                <div
-                    class="pixel-border animate smaller"
-                    @click="window.game.flip()"
-                >
-                    Flip
+                <div class="flex flex-row ml-64">
+                    <div
+                        x-show="$store.game.moves > 0"
+                        class="pixel-border animate smaller mr-5"
+                        @click="window.game.reset()"
+                    >
+                        Resign
+                    </div>
+
+                    <div
+                        x-show="$store.game.moves === 0"
+                        class="pixel-border animate smaller mr-5"
+                        @click="window.game.reset()"
+                    >
+                        Reset
+                    </div>
+
+                    <div
+                        class="pixel-border animate smaller mr-5"
+                        @click="window.game.flip()"
+                    >
+                        Flip
+                    </div>
+                    <div
+                        class="pixel-border animate smaller mr-5"
+                        @click=""
+                    >
+                        AI
+                    </div>
+                    <div
+                        x-show="$store.game.thinking === true"
+                        x-transition
+                        class="inline-block w-24 text-xs text-fluorescent-blue"
+                    >
+                        Thinking...
+                    </div>
                 </div>
+            </section>
+
+            <section
+                id="endgame-screen"
+                x-cloak
+                x-show="
+                    $store.game.inCheckmate === true ||
+                    $store.game.inStalemate === true ||
+                    $store.game.inDraw === true ||
+                    $store.game.insufficientMaterial === true ||
+                    $store.game.inThreefoldRepetition === true
+                "
+                class="fixed top-0 left-0 w-full h-full flex items-center justify-center"
+                style="background: rgba(0,0,0,0.4)"
+            >
                 <div
-                    class="pixel-border animate smaller"
-                    @click=""
+                    x-show="
+                        $store.game.inCheckmate === true ||
+                        $store.game.inStalemate === true ||
+                        $store.game.inDraw === true ||
+                        $store.game.insufficientMaterial === true ||
+                        $store.game.inThreefoldRepetition === true
+                    "
+                    x-transition
+                    class="pixel-border w-1/4 flex flex-col justify-center items-center p-5 text-center"
                 >
-                    AI
+                    <template x-if="$store.game.inCheckmate === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Checkmate!
+                        </h2>
+                    </template>
+                    <template x-if="$store.game.inStalemate === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Stalemate...
+                        </h2>
+                    </template>
+                    <template x-if="$store.game.inDraw === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Draw
+                        </h2>
+                    </template>
+                    <template x-if="$store.game.insufficientMaterial === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Draw by insufficient material
+                        </h2>
+                    </template>
+                    <template x-if="$store.game.inThreefoldRepetition === true">
+                        <h2 class="text-xl text-fluorescent-blue mb-8">
+                            Draw by repetition
+                        </h2>
+                    </template>
+
+                    <div
+                        class="pixel-border animate smaller"
+                        @click="window.game.reset()"
+                    >
+                        Restart
+                    </div>
                 </div>
             </section>
 
@@ -132,23 +300,14 @@
                     <p class="text-xs mb-5">
                         This project was coded over roughly 2-weeks so there are
                         many improvements that could be made to the AI. However,
-                        currently, it plays at around 1,500
+                        currently, it plays at around 2,000
                         <a
                             href="https://www.chess.com/terms/elo-rating-chess"
                             class="text-phiox hover:opacity-75"
                             target="_blank"
                         >
-                            ELO
+                            ELO.
                         </a>
-                        and can hold it's own playing 2,000+
-                        <a
-                            href="https://www.chess.com/terms/elo-rating-chess"
-                            class="text-phiox hover:opacity-75"
-                            target="_blank"
-                        >
-                            ELO
-                        </a>
-                        ratings.
                     </p>
                 </div>
             </section>
