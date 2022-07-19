@@ -31,6 +31,6 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
-        run: npm prod
+        run: npm run prod
       - name: Deploy
         run: aws s3 sync public/ ${{ secrets.AWS_BUCKET }}
