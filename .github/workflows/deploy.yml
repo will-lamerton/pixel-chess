@@ -15,7 +15,7 @@ jobs:
         id: npm-cache
         with:
           path: node_modules
-          key:${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-npm-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
