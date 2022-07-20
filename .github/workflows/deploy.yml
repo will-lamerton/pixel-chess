@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment: Production
     steps:
       - uses: actions/checkout@v2
       - name: Cache modules
@@ -15,14 +16,14 @@ jobs:
         id: npm-cache
         with:
           path: node_modules
-          key:${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: ${{ runner.os }}-npm-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id:${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key:${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: {{ secrets.AWS_REGION }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
       - name: Use Node.js 12.x
         uses: actions/setup-node@v1
         with:
@@ -30,6 +31,6 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
-        run: npm prod
+        run: npm run prod
       - name: Deploy
-        run: aws s3 sync public/ {{ secrets.AWS_BUCKET }}
+        run: aws s3 sync public/ ${{ secrets.AWS_BUCKET }}
