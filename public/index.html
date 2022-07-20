@@ -21,6 +21,7 @@
                 gameStarted: false,
                 howItWorksOpen: false,
                 creditsOpen: false,
+                aiSettingsOpen: false,
             }"
             class="w-screen flex items-center justify-center"
         >
@@ -157,11 +158,78 @@
                         Flip
                     </div>
                     <div
+                        class="pixel-border animate smaller mr-5"
+                        @click="aiSettingsOpen = true"
+                    >
+                        AI
+                    </div>
+                    <div
                         x-show="$store.game.thinking === true"
                         x-transition
                         class="inline-block w-24 text-xs text-fluorescent-blue"
                     >
                         Thinking...
+                    </div>
+                </div>
+            </section>
+
+            <section
+                id="ai-settings"
+                x-cloak
+                x-show="aiSettingsOpen === true"
+                class="fixed top-0 left-0 w-full h-full flex items-center justify-center"
+                style="background: rgba(0,0,0,0.4)"
+            >
+                <div
+                    x-show="aiSettingsOpen === true"
+                    x-transition
+                    class="pixel-border w-1/2 flex flex-col justify-center items-center p-5 text-center"
+                >
+                    <h2 class="text-xl text-fluorescent-blue mb-5">
+                        AI Settings
+                    </h2>
+
+                    <h3 class="text-sm mb-3">
+                        Search Depth
+                    </h3>
+
+                    <input
+                        x-model="$store.game.ai.searchDepth"
+                        type="range"
+                        min="1"
+                        max="4"
+                        value="2"
+                        class="mb-2"
+                    />
+
+                    <div
+                        x-text="$store.game.ai.searchDepth + ' ply'"
+                        class="mb-10 text-xs text-phiox"
+                    ></div>
+
+                    <h3 class="text-sm mb-3">
+                        Max Search Time
+                    </h3>
+
+                    <input
+                        x-model="$store.game.ai.allocatedSearchTime"
+                        type="range"
+                        min="100"
+                        max="60000"
+                        value="30000"
+                        class="mb-2"
+                    />
+
+                    <div
+                        x-text="(Math.round($store.game.ai.allocatedSearchTime / 1000)) + ' seconds'"
+                        class="mb-10 text-xs text-phiox"
+                    ></div>
+
+                    <div
+                        class="pixel-border animate smaller"
+                        @click="aiSettingsOpen = false"
+                    >
+                        Done
                     </div>
                 </div>
             </section>

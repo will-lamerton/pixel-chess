@@ -136,6 +136,8 @@ class Game {
             originalPosition: window.game.chess.fen(),
             lastPlayerMove: (piece.substring(1) === 'P') ? target : piece.substring(1).toUpperCase()+target,
             numberOfMoves: window.game.moves,
+            allocatedSearchTime: window.Alpine.store('game').ai.allocatedSearchTime,
+            searchDepth: window.Alpine.store('game').ai.searchDepth
         });
 
         // Method to await engine worker response.
@@ -203,6 +205,8 @@ class Game {
                 originalPosition: window.game.chess.fen(),
                 lastPlayerMove: undefined,
                 numberOfMoves: window.game.moves,
+                allocatedSearchTime: window.Alpine.store('game').ai.allocatedSearchTime,
+                searchDepth: window.Alpine.store('game').ai.searchDepth,
             });
 
             window.game.ai.onmessage = (e) => {
@@ -334,6 +338,11 @@ Alpine.store('game', {
     inDraw: false,
     inThreefoldRepetition: false,
     insufficientMaterial: false,
+
+    ai: {
+        allocatedSearchTime: 30000,
+        searchDepth: 2,
+    }
 })
 
 Alpine.start();

@@ -41,7 +41,8 @@ body {
 
 h1 {
     @apply text-5xl mb-12;
-    color: var(--fluorescent-blue);
+    color: rgb(0, 230, 229);
+    text-shadow: 4px 4px 0 var(--phiox);
 }
 
 h2 {

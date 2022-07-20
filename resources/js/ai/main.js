@@ -318,11 +318,7 @@ function negaMax(alpha, beta, depth) {
     let currentBestScore = -Infinity;
     let currentBestMove = '';
 
-    let time0 = performance.now();
     let moves = self.chess.moves({ verbose: true });
-    let time1 = performance.now();
-
-    console.log(time1-time0)
     self.currentMoveSet = moves;
     moves = orderMoves(moves);
 
@@ -354,15 +350,15 @@ onmessage = (e) => {
     self.chess = new Chess(e.data.originalPosition);
     self.lastMove = e.data.lastMove;
     self.numberOfMoves = e.data.moves;
+    self.allocatedSearchTime = e.data.allocatedSearchTime;
+    self.searchDepth = e.data.searchDepth;
 
     self.positionsEvaluated = 0;
-    self.searchDepth = 2;
     self.alpha = -Infinity;
     self.beta = Infinity;
     self.openings = OpeningBook;
     self.pieceTables = PieceTables;
     self.currentMoveSet = null;
-    self.allocatedSearchTime = 30000;
 
     self.searchTimeStart = 0;
 
@@ -379,7 +375,7 @@ onmessage = (e) => {
     self.lastPlayerMove = e.data.lastPlayerMove;
     self.numberOfMoves = e.data.numberOfMoves;
 
-    let moves = self.chess.moves({verbose: true});
+    let moves = self.chess.moves({ verbose: true });
     self.currentMoveSet = moves;
     moves = orderMoves(moves);
 
