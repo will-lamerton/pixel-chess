@@ -12,7 +12,7 @@ class Game {
         this.ai = new Worker('./js/ai/main.js', { type: 'module' });
 
         this.config = {
-            pieceTheme: './img/chesspieces/retro/{piece}.svg',
+            pieceTheme: './img/chesspieces/font-awesome/{piece}.svg',
             position: 'start',
             draggable: true,
             onDragStart: this.onDragStart,
@@ -49,7 +49,7 @@ class Game {
             window.game.board = Chessboard(
                 'board',
                 {
-                    pieceTheme: './img/chesspieces/retro/{piece}.svg',
+                    pieceTheme: './img/chesspieces/font-awesome/{piece}.svg',
                     position: window.game.chess.fen(),
                     draggable: true,
                     onDragStart: window.game.onDragStart,
@@ -61,7 +61,7 @@ class Game {
             window.game.board = Chessboard(
                 'board',
                 {
-                    pieceTheme: './img/chesspieces/retro/{piece}.svg',
+                    pieceTheme: './img/chesspieces/font-awesome/{piece}.svg',
                     position: window.game.chess.fen(),
                     draggable: true,
                     onDragStart: window.game.onDragStart,
@@ -340,7 +340,7 @@ Alpine.store('game', {
     insufficientMaterial: false,
 
     ai: {
-        allocatedSearchTime: 30000,
+        allocatedSearchTime: 1000,
         searchDepth: 2,
     }
 })
