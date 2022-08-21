@@ -43,8 +43,6 @@ class Game {
         window.game.moves++;
         window.Alpine.store('game').moves++;
 
-        new Audio('audio/move.mp3').play();
-
         if (window.game.playingAs === 'w' && window.game.chess.turn() !== 'w') {
             window.game.board = Chessboard(
                 'board',
@@ -133,7 +131,7 @@ class Game {
         window.Alpine.store('game').thinking = true;
 
         window.game.ai.postMessage({
-            originalPosition: window.game.chess.fen(),
+            position: window.game.chess.fen(),
             lastPlayerMove: (piece.substring(1) === 'P') ? target : piece.substring(1).toUpperCase()+target,
             numberOfMoves: window.game.moves,
             allocatedSearchTime: window.Alpine.store('game').ai.allocatedSearchTime,

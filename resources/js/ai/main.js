@@ -70,7 +70,7 @@ function orderMoves(moves, justCaptures = false) {
  * of piece and it's position on the board.
  *
  * @param {array} board - pass a board array or don't and use the current game one.
- * Get board array with: `window.game.chess.board()`
+ * Get board array with: `self.chess.board()`
  * @return {object} – material values.
  */
 function calculateMaterialValue(board = undefined) {
@@ -346,10 +346,24 @@ function negaMax(alpha, beta, depth) {
     return alpha;
 }
 
+/**
+ * Entry for engine.
+ * @param {object} e – Worker event. Contains data object with engine parameters.
+ * 
+ * @param {string} e.data.position - FEN string of original position.
+ * (Original because we'll be manipulating the board position to determine the best move).
+ * 
+ * @param {int} e.data.numberOfMoves - number of moves in the game. Used for various calculations where
+ * number of moves is important.
+ * 
+ * @param {string} e.data.lastPlayerMove – the last player move. This is used for opening play calculation.
+ * 
+ * @param {int} e.data.allocatedSearchTime – the amount of time the engine has to find the best move.
+ * 
+ * @param {int} e.data.searchDepth – the depth in the game tree for the engine to search to.
+ **/
 onmessage = (e) => {
-    self.chess = new Chess(e.data.originalPosition);
-    self.lastMove = e.data.lastMove;
-    self.numberOfMoves = e.data.moves;
+    self.chess = new Chess(e.data.position);
     self.allocatedSearchTime = e.data.allocatedSearchTime;
     self.searchDepth = e.data.searchDepth;
 
@@ -359,8 +373,6 @@ onmessage = (e) => {
     self.openings = OpeningBook;
     self.pieceTables = PieceTables;
     self.currentMoveSet = null;
-
-    self.searchTimeStart = 0;
 
     self.pieces = {
         p: 100,
