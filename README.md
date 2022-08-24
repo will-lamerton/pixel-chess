@@ -16,7 +16,7 @@ This evaluation function takes into consideration a number of factors, including
 
 This project was coded over roughly 2-weeks so there are many improvements that could be made to the AI (see shortcomings and roadmap).
 
-However, currently, the engine plays at around 2,000 [ELO](https://www.chess.com/terms/elo-rating-chess).
+However, currently, the engine plays at around 1,500 – 2,000 [ELO](https://www.chess.com/terms/elo-rating-chess). A formal test for this is needed though.
 
 ## Usage
 The engine is totally standalone and can be hooked up to any project via a Web Worker. The AI simply takes a number of parameters and feeds back a string with what it thinks is the best move for a given position. The front-end UI simply then takes that move and updates the board.
@@ -26,8 +26,7 @@ In the repo under `/resources/js/ai` you can find the code for the AI. It has on
 Assuming you have a front-end UI setup to play, you can use the engine with the below code:
 
 ```js
-const ai = new Worker('./js/ai/main.js', {type: 'module'}
-);
+const ai = new Worker('./js/ai/main.js', {type: 'module'});
 ```
 
 This sets up the Web Worker which you can then post a message to in order to generate a move.
