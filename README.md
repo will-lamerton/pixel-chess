@@ -134,7 +134,7 @@ Having listed out the shortcomings of the engine, there are obviously a lot of c
 
 Being an open source project, we'll have to work on this when we can however, we'd love to implement solutions to all the above problems overtime as well as a plethora of other ideas to not only improve the engine but the front-end website you can play it and it's accessibility to others wanting to use it in their projects.
 
-A more detailed roadmap can be found [here](https://faceted-period-56f.notion.site/84d80b6c1c7c4d7e9137eadef5f82c9c?v=b18451b52ea543d6b84b329430e031ac)
+A more detailed roadmap can be found [here](https://faceted-period-56f.notion.site/84d80b6c1c7c4d7e9137eadef5f82c9c?v=b18451b52ea543d6b84b329430e031ac).
 
 ## Contributing
 We would love contributors – please feel free to work on Pixel Chess, create discussions and submit pull requests :)
