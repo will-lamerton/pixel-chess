@@ -9,6 +9,23 @@
 <hr>
 <br>
 
+## Contents
+The documentation for Pixel Chess is broken down by the following headings.
+- [Introduction](#introduction)
+- [Usage](#usage)
+- [Play via the website](#play-via-the-website)
+- [Shortcomings](#shortcomings)
+    - [Speed](#speed)
+    - [Other general functions](#other-general-functions)
+    - [Opening](#opening)
+    - [Middlegame](#middlegame)
+    - [Endgame](#endgame)
+    - [Modern techniques](#modern-techniques)
+    - [UCI compatible](#uci-compatible)
+- [Roadmap](#roadmap)
+- [Contributing](#contributing)
+- [Credits](#credits)
+
 ## Introduction
 The engine behind Pixel Chess works much like any other traditional chess engine. Written 100% in JavaScript, the AI uses an algorithm called NegaMax to look at a number of moves ahead and then an evaluation function to decide on the best move.
 
@@ -63,7 +80,7 @@ You can find an example of how this functionality is implemented via the main ga
 
 <br>
 
-## Playing Via Pixel Chess
+## Play via the website
 As mentioned, this repo hooks the engine up to a retro front-end inspired by the [Kilobyte Gambit](https://vole.wtf/kilobytes-gambit/). You can play Chess against it by heading over to the [website](https://chess.barr.media).
 
 It's pretty simplistic at the moment but you can control the AI's strength by clicking the "AI" button whilst playing. The default is to search 2 ply and return a move within 2 seconds to keep things speedy for most users.
@@ -84,7 +101,7 @@ Having such a low cap on depth obviously limits the AI, mostly in the endgame wh
 
 To overcome this, custom move generation and board representation should be written so that the engine doesn't have to rely on Chess.js to do this. It's not that Chess.js is a bad framework, it's just that the AI has been written around what is possible with Chess.js which is often at the cost of performance.
 
-### Other General Functions
+### Other general functions
 The AI currently implements NegaMax with alpha/beta pruning and move ordering to power search in conjunction with the Evaluation function. This has been a great start however, basic general function improvement could come in the form of:
 
 - Adding transposition tables.
@@ -93,7 +110,7 @@ The AI currently implements NegaMax with alpha/beta pruning and move ordering to
 - More advanced piece tables taking the game stage into consideration.
 - More advanced quiescence search.
 
-### Openings
+### Opening
 The engine currently uses an opening book to bring variance and strong play in the opening moves. This book could of course be extended to add more openings, transpositions and sidelines.
 
 ### Middlegame
@@ -104,10 +121,10 @@ This is where the AI is weakest. Mostly down to search depth ability which is sp
 
 Improving this would certainly help the endgame, but things like changing what the Evaluation function believes is a good move in the endgame would also help. For example, adding a positive weight to the evaluation if a move pushes the enemy King to the edge of the board as well as encouraging a more active King would help the engine win endgames.
 
-### Modern Techniques
+### Modern techniques
 The engine is very classical using brute force methods to play. In the future coupling, the classic methods of Chess engines with some kind of neural network to learn and play better could have awesome strength improvement.
 
-### UCI Compatible
+### UCI compatible
 As the title suggests, making the engine UCI compatible would of course open the door for possible advancements.
 
 <br>
