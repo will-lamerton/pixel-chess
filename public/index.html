@@ -7,6 +7,8 @@
         <meta charset="utf-8">
 
         <link rel="stylesheet" href="css/main.css"/>
+        <link rel="stylesheet" href="css/animations.css"/>
+
 
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
         <script src="js/chessboard.js"></script>
@@ -23,7 +25,7 @@
                 creditsOpen: false,
                 aiSettingsOpen: false,
             }"
-            class="w-screen flex items-center justify-center"
+            class="w-screen h-screen flex items-center justify-center screen"
         >
             <section
                 x-cloak
@@ -299,7 +301,7 @@
                 x-cloak
                 x-show="gameStarted === false"
             >
-                <h1>
+                <h1 class="glitch">
                     Pixel Chess
                 </h1>
 

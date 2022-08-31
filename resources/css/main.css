@@ -34,9 +34,6 @@ html {
 
 body {
     @apply flex flex-row items-center justify-center w-screen h-screen m-0;
-    background-image: radial-gradient(var(--phiox) 10%, #1f1027 10%);
-    background-position: 0 0;
-    background-size: 10px 10px;
 }
 
 h1 {
