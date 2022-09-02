@@ -33,7 +33,7 @@ This evaluation function takes into consideration a number of factors, including
 
 This project was coded over roughly 2-weeks so there are many improvements that could be made to the AI (see shortcomings and roadmap).
 
-However, currently, the engine plays at around 1,500 – 2,000 [ELO](https://www.chess.com/terms/elo-rating-chess). A formal test for this is needed though.
+However, currently, the engine plays at around 1,500 [ELO](https://www.chess.com/terms/elo-rating-chess). A formal test for this is needed though.
 
 ## Usage
 The engine is totally standalone and can be hooked up to any project via a Web Worker. The AI simply takes a number of parameters and feeds back a string with what it thinks is the best move for a given position. The front-end UI simply then takes that move and updates the board.

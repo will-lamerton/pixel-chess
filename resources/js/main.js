@@ -338,7 +338,7 @@ Alpine.store('game', {
     insufficientMaterial: false,
 
     ai: {
-        allocatedSearchTime: 1000,
+        allocatedSearchTime: 2000,
         searchDepth: 2,
     }
 })
