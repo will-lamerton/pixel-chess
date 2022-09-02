@@ -8,21 +8,6 @@ body {
 	position: relative;
   	overflow: hidden;
 
-	// Flicker
-	&::after{
-		content: " ";
-		display: block;
-		position: absolute;
-		top: 0;
-		left: 0;
-		bottom: 0;
-		right: 0;
-		background: transparentize($screen-background,0.9);
-		opacity: 0;
-		z-index: 2;
-		pointer-events: none;
-	}
-
 	// Scanlines
 	&::before{
 		content: " ";
