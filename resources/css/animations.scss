@@ -48,10 +48,10 @@ body {
 	}
 }
 
-body > .screen {
-	animation: turn-on 4s linear;
-	animation-fill-mode: forwards;
-}
+// body > .screen {
+// 	animation: turn-on 4s linear;
+// 	animation-fill-mode: forwards;
+// }
 
 
 @keyframes turn-on{
