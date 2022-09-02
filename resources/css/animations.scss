@@ -3,15 +3,6 @@ $ease-in-quint: cubic-bezier(0.755, 0.050, 0.855, 0.060);
 $screen-background: #1f1027;
 
 
-@keyframes flicker{
-	$steps:20;
-	@for $i from 0 through $steps{
-		#{percentage($i*(1/$steps))}{
-			opacity: random();
-		}
-	}
-}
-
 body {
 	background-color: $screen-background;
 	position: relative;
@@ -30,8 +21,8 @@ body {
 		opacity: 0;
 		z-index: 2;
 		pointer-events: none;
-		animation: flicker 0.15s infinite;
 	}
+
 	// Scanlines
 	&::before{
 		content: " ";
@@ -48,10 +39,10 @@ body {
 	}
 }
 
-// body > .screen {
-// 	animation: turn-on 4s linear;
-// 	animation-fill-mode: forwards;
-// }
+body > .screen {
+	animation: turn-on 4s linear;
+	animation-fill-mode: forwards;
+}
 
 
 @keyframes turn-on{
@@ -83,7 +74,7 @@ body {
 	
 	100%{
 		transform: scale(1,1) translate3d(0,0,0);
-		filter: contrast(1) brightness(1.2) saturate(1.3);
+		filter: contrast(1) brightness(1.1) saturate(1.3);
 		opacity: 1;
 	}
 }
