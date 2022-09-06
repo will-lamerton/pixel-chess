@@ -7,10 +7,13 @@ class Game {
      * Constructor
      */
     constructor() {
+        // Setup new instance of Chess.js
         this.chess = new Chess();
 
+        // Create a new instance of the AI.
         this.ai = new Worker('./js/ai/main.js', { type: 'module' });
 
+        // Board configuration...
         this.config = {
             pieceTheme: './img/chesspieces/font-awesome/{piece}.svg',
             position: 'start',
@@ -20,18 +23,12 @@ class Game {
             orientation: 'white',
         }
 
+        // Create the board.
         this.board = Chessboard('board', this.config);
 
+        // Setup variables...
         this.moves = 0;
         this.playingAs = 'w';
-
-        this.pieces = {
-            p: 100,
-            n: 320,
-            b: 330,
-            r: 500,
-            q: 900,
-        }
     }
 
     /**
@@ -40,9 +37,11 @@ class Game {
      * @return {void}
      */
     update(fen = undefined) {
+        // Add one to the move counter and store for the front end.
         window.game.moves++;
         window.Alpine.store('game').moves++;
 
+        // Update the board based on colour...
         if (window.game.playingAs === 'w' && window.game.chess.turn() !== 'w') {
             window.game.board = Chessboard(
                 'board',
@@ -116,6 +115,7 @@ class Game {
             return 'snapback';
         }
 
+        // Updat the board.
         window.game.update();
 
         // If capture, we need to update the UI.
@@ -128,8 +128,10 @@ class Game {
         document.getElementsByClassName(`square-${source}`)[0].classList.add('highlight-white');
         document.getElementsByClassName(`square-${target}`)[0].classList.add('highlight-white');
 
+        // Let the UI know the AI is thinking.
         window.Alpine.store('game').thinking = true;
 
+        // Send a message to the engine to generate a move.
         window.game.ai.postMessage({
             position: window.game.chess.fen(),
             lastPlayerMove: (piece.substring(1) === 'P') ? target : piece.substring(1).toUpperCase()+target,
@@ -140,8 +142,10 @@ class Game {
 
         // Method to await engine worker response.
         window.game.ai.onmessage = (e) => {
+            // Let the UI know the AI has stopped thinking.
             window.Alpine.store('game').thinking = false;
 
+            // Make the move the engine chose.
             let move = window.game.chess.move(e.data);
 
             // If capture, we need to update the UI.
@@ -184,6 +188,7 @@ class Game {
             document.getElementsByClassName(`square-${move.from}`)[0].classList.add('highlight-black');
             document.getElementsByClassName(`square-${move.to}`)[0].classList.add('highlight-black');
 
+            // Update everything!
             window.game.board.position(window.game.chess.fen());
             window.game.update();
         }
@@ -194,11 +199,14 @@ class Game {
      * @return {void}
      */
     flip() {
+        // Flip the board.
         window.game.board.orientation('flip');
 
+        // If the game hasn't started and we flip, we'll get the AI to play a move as white.
         if (window.game.moves === 0) {
             window.game.playingAs = (window.game.chess.turn() === 'w') ? 'b' : 'w';
 
+            // Post message to engine.
             window.game.ai.postMessage({
                 originalPosition: window.game.chess.fen(),
                 lastPlayerMove: undefined,
@@ -207,6 +215,7 @@ class Game {
                 searchDepth: window.Alpine.store('game').ai.searchDepth,
             });
 
+            // Recieve message back from engine.
             window.game.ai.onmessage = (e) => {
                 window.game.chess.move(e.data);
                 window.game.board.position(window.game.chess.fen());
@@ -305,11 +314,14 @@ class Game {
     }
 }
 
+// Create a new instance of the game.
 const game = new Game();
 window.game = game;
 
+// Create a new intance of Alpine for the UI.
 window.Alpine = Alpine;
 
+// Create a store so that the UI can interface with the engine and game code.
 Alpine.store('game', {
     moves: window.game.moves,
     thinking: false,
@@ -343,4 +355,5 @@ Alpine.store('game', {
     }
 })
 
+// Start Alpine.
 Alpine.start();

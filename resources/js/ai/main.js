@@ -73,23 +73,24 @@ function orderMoves(moves, justCaptures = false) {
  * Get board array with: `self.chess.board()`
  * @return {object} – material values.
  */
-function calculateMaterialValue(board = undefined) {
-    board = (board === undefined) ?
-        self.chess.board() :
-        board
-    ;
+function calculateMaterialValue(board) {
 
+    // Set values to zero.
     let whiteMaterialValue = 0;
     let blackMaterialValue = 0;
 
+    // Loop through all ranks on the board.
     for (let rank=0; rank<board.length; rank++) {
+        // Loop through all squares in a rank.
         for (let square=0; square<board[rank].length; square++) {
-
+            // If square is empty, continue to the next square.
             if (board[rank][square] === null) {
                 continue;
             }
 
+            // If piece is white...
             if (board[rank][square]['color'] === 'w') {
+                // Choose piece and calculate value from strength and also position...
                 switch (board[rank][square]['type']) {
                     case 'p':
                         whiteMaterialValue += self.pieces.p;
@@ -156,7 +157,9 @@ function calculateMaterialValue(board = undefined) {
                         break;
                 }
             }
+            // Else, if black...
             else {
+                // Do the same... choose piece and calculate value from strength and also position...
                 switch (board[rank][square]['type']) {
                     case 'p':
                         blackMaterialValue += self.pieces.p;
@@ -226,6 +229,7 @@ function calculateMaterialValue(board = undefined) {
         }
     }
 
+    // Return an object with material values.
     return {
         white: {
             materialValue: whiteMaterialValue,
@@ -306,30 +310,36 @@ function searchAllCaptures(alpha, beta) {
  * @param  {int} depth - depth to search to.
  * @return {int|float} - highest score.
  */
-function negaMax(alpha, beta, depth) {
+function negaMax(alpha, beta, depth, nullMove = true) {
+    // Count the positions evaluated.
     self.positionsEvaluated++;
 
+    // Make sure we're within our time limits.
     const timeCheck = performance.now();
 
-    if (depth === 0 || (timeCheck - self.searchTimeStart) > self.allocatedSearchTime) {
+    // If depth is 0 or we're out of time run a shallow search looking for immediate
+    // threats as a counter to the horizon effect and return this eval.
+    if (depth <= 0 || (timeCheck - self.searchTimeStart) > self.allocatedSearchTime) {
         return searchAllCaptures(alpha, beta);
     }
-
-    let currentBestScore = -Infinity;
-    let currentBestMove = '';
-
+    
+    // Generate and order moves.
     let moves = self.chess.moves({ verbose: true });
     self.currentMoveSet = moves;
     moves = orderMoves(moves);
 
-
+    // If no moves we must be in checkmate or stalemate.
     if (moves.length === 0) {
         if (self.chess.in_checkmate() === true) {
+            // If checkmate, we lose so the score is -Infinity aka... bad.
             return -Infinity;
         }
+
+        // If stalemate it's a draw so eval is 0.
         return 0;
     }
 
+    // Loop over moves and perform depth search and eval.
     for (let i=0; i<moves.length; i++) {
         self.chess.move(moves[i]);
         let newScore = -negaMax(-beta, -alpha, depth-1);
@@ -363,10 +373,14 @@ function negaMax(alpha, beta, depth) {
  * @param {int} e.data.searchDepth – the depth in the game tree for the engine to search to.
  **/
 onmessage = (e) => {
+    // Setup all variables passed in from the UI.
     self.chess = new Chess(e.data.position);
     self.allocatedSearchTime = e.data.allocatedSearchTime;
     self.searchDepth = e.data.searchDepth;
+    self.lastPlayerMove = e.data.lastPlayerMove;
+    self.numberOfMoves = e.data.numberOfMoves;
 
+    // Setup other variables needed.
     self.positionsEvaluated = 0;
     self.alpha = -Infinity;
     self.beta = Infinity;
@@ -382,47 +396,62 @@ onmessage = (e) => {
         q: 900,
     }
 
+    // Start the clock for search time.
     self.searchTimeStart = performance.now();
 
-    self.lastPlayerMove = e.data.lastPlayerMove;
-    self.numberOfMoves = e.data.numberOfMoves;
-
+    // Generate and order all legal moves for position.
     let moves = self.chess.moves({ verbose: true });
     self.currentMoveSet = moves;
     moves = orderMoves(moves);
 
+    // Reset current best move.
     let currentBestMove = undefined;
 
     // Check opening book if there are still openings that could be played.
     if (self.outOfOpening === false) {
-
+        // Array of playable openings.
         let playableOpenings = [];
 
+        // Loop through all openings in the book.
         for (let opening=0; opening<self.openings.length; opening++) {
+            // Split moves down into an array seperating by spaces.
             let openingExploded = self.openings[opening].split(' ');
 
+            // If we're on the first move, automatically add all openings to the array
+            // as we could play anything!
             if (self.numberOfMoves === 0) {
                 playableOpenings.push(openingExploded[self.numberOfMoves]);
             }
 
+            // Else check to see if the last player move lines up with the correct move in the
+            // opening book.
             else if (self.lastPlayerMove === openingExploded[self.numberOfMoves-1]) {
+                // If it does, push it as a playable opening.
                 playableOpenings.push(openingExploded[self.numberOfMoves]);
             }
         }
 
+        // If we have a playable opening...
         if (playableOpenings.length !== 0) {
+            // Pick a random one and set it to be the `currentBestMove`.
             const randomMoveIndexFromOpenings = Math.floor(Math.random() * playableOpenings.length);
             currentBestMove = playableOpenings[randomMoveIndexFromOpenings];
 
+            // Little fail safe check to ensure the move is actually a legal one.
             if (moves.includes(currentBestMove) === false) {
+                // If it's not then we'll set the current best move to be undefined again.
                 currentBestMove = undefined;
             }
         }
+        // If there are no playable openings then we'll set the engine to be out of opening which
+        // will trigger it have to act for itself.
         else {
             self.outOfOpening = true;
         }
     }
 
+    // If we don't have a legal move by this point, the opening book has failed so we'll need to search
+    // and evaluate.
     if (currentBestMove === undefined) {
         let currentBestScore = -Infinity;
 
@@ -444,5 +473,6 @@ onmessage = (e) => {
         );
     }
 
+    // Send best move back to the UI.
     postMessage(currentBestMove);
 }

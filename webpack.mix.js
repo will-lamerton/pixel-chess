@@ -17,5 +17,5 @@ mix
     .postCss("resources/css/main.css", "public/css", [
         require("tailwindcss"),
     ])
-    .sass("resources/css/animations.scss", "public/css")
+    .sass("resources/css/ctr.scss", "public/css")
 ;
