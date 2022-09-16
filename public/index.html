@@ -28,7 +28,6 @@
                 aiSettingsOpen: false,
                 showingEvaluationBar: true,
                 evaluation: {
-                    asNumber: 0,
                     white: 50,
                     black: 50,
                 }
@@ -40,15 +39,7 @@
 
                 let playerWinning = (evaluationToDisplay > 0) ? false : true;
 
-                if ($store.game.playingAs === 'b' && evaluationToDisplay < 0) {
-                    evaluationToDisplay = -evaluationToDisplay;
-                }
-                else if ($store.game.playingAs === 'w' && evaluationToDisplay > 0) {
-                    evaluationToDisplay = -evaluationToDisplay;
-                }
-
                 evaluation = {
-                    asNumber: evaluationToDisplay,
                     white: 50,
                     black: 50
                 };
@@ -92,23 +83,16 @@
                 <div
                     x-show="showingEvaluationBar === true"
                     x-transition
-                    class="w-screen lg:w-104 lg:ml-64 flex flex-col items-center justify-center lg:mb-5 p-5 lg:p-0"
+                    class="w-screen lg:w-104 lg:ml-64 flex flex-row items-center justify-center lg:mb-5 p-5 lg:p-0"
                 >
                     <div
-                        x-text="evaluation.asNumber"
-                        class="text-white text-xs mb-2"
+                        class="bg-fluorescent-blue h-3 transition-all duration-200"
+                        :style="{ width: `${evaluation.white}%` }"
                     ></div>
-
-                    <div class="w-full flex flex-row">
-                        <div
-                            class="bg-fluorescent-blue h-3 transition-all duration-200"
-                            :style="{ width: `${evaluation.white}%` }"
-                        ></div>
-                        <div
-                            class="bg-phiox h-3 transition-all duration-200"
-                            :style="{ width: `${evaluation.black}%` }"
-                        ></div>
-                    </div>
+                    <div
+                        class="bg-phiox h-3 transition-all duration-200"
+                        :style="{ width: `${evaluation.black}%` }"
+                    ></div>
                 </div>
 
                 <div class="flex flex-row items-center justify-center">
