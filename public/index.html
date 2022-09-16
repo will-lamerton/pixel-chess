@@ -8,6 +8,8 @@
 
         <link rel="stylesheet" href="css/main.css"/>
         <link rel="stylesheet" href="css/ctr.css"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
 
 
         <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
@@ -34,7 +36,7 @@
             >
 
                 <div class="flex flex-row items-center justify-center">
-                    <div class="w-64 flex flex-col items-end">
+                    <div class="hidden w-64 lg:flex flex-col items-end">
                         <div class="flex flex-row">
                             <template x-for="(capture, index) in $store.game.captures.w.p">
                                 <img
@@ -84,10 +86,10 @@
 
                     <div
                         id="board"
-                        class="w-104 flex justify-center mb-5"
+                        class="w-screen lg:w-104 flex justify-center mb-5 p-5 lg:p-0"
                     ></div>
 
-                    <div class="w-64">
+                    <div class="hidden lg:block w-64">
                         <div class="flex flex-row">
                             <template x-for="(capture, index) in $store.game.captures.b.p">
                                 <img
@@ -136,41 +138,45 @@
                     </div>
                 </div>
 
-                <div class="flex flex-row ml-64">
-                    <div
-                        x-show="$store.game.moves > 0"
-                        class="pixel-border animate smaller mr-5"
-                        @click="window.game.reset()"
-                    >
-                        Resign
+                <div class="flex flex-col items-center">
+                    <div class="flex flex-row mb-10">
+                        <div
+                            x-show="$store.game.moves > 0"
+                            class="pixel-border animate smaller mr-5"
+                            @click="window.game.reset()"
+                        >
+                            Resign
+                        </div>
+
+                        <div
+                            x-show="$store.game.moves === 0"
+                            class="pixel-border animate smaller mr-5"
+                            @click="window.game.reset()"
+                        >
+                            Reset
+                        </div>
+
+                        <div
+                            class="pixel-border animate smaller mr-5"
+                            @click="window.game.flip()"
+                        >
+                            Flip
+                        </div>
+                        <div
+                            class="pixel-border animate smaller mr-5"
+                            @click="aiSettingsOpen = true"
+                        >
+                            AI
+                        </div>
                     </div>
 
-                    <div
-                        x-show="$store.game.moves === 0"
-                        class="pixel-border animate smaller mr-5"
-                        @click="window.game.reset()"
-                    >
-                        Reset
-                    </div>
-
-                    <div
-                        class="pixel-border animate smaller mr-5"
-                        @click="window.game.flip()"
-                    >
-                        Flip
-                    </div>
-                    <div
-                        class="pixel-border animate smaller mr-5"
-                        @click="aiSettingsOpen = true"
-                    >
-                        AI
-                    </div>
-                    <div
-                        x-show="$store.game.thinking === true"
-                        x-transition
-                        class="inline-block w-24 text-xs text-fluorescent-blue"
-                    >
-                        Thinking...
+                    <div class="w-24 h-10 text-xs text-fluorescent-blue">
+                        <div
+                            x-show="$store.game.thinking === true"
+                            x-transition
+                        >
+                            Thinking...
+                        </div>
                     </div>
                 </div>
             </section>
@@ -185,7 +191,7 @@
                 <div
                     x-show="aiSettingsOpen === true"
                     x-transition
-                    class="pixel-border w-1/2 flex flex-col justify-center items-center p-5 text-center"
+                    class="pixel-border w-full h-full lg:h-auto lg:w-1/2 flex flex-col justify-center items-center p-5 text-center"
                 >
                     <h2 class="text-xl text-fluorescent-blue mb-5">
                         AI Settings
@@ -297,30 +303,30 @@
 
             <section
                 id="menu"
-                class="flex flex-col justify-center items-center text-center"
+                class="flex flex-col justify-center items-center text-center p-5"
                 x-cloak
                 x-show="gameStarted === false"
             >
-                <h1 class="glitch">
+                <h1 class="glitch text-5xl mb-12 leading-tight">
                     Pixel Chess
                 </h1>
 
                 <div
-                    class="pixel-border animate w-60 mb-12"
+                    class="pixel-border animate w-3/4 lg:w-60 mb-12"
                     @click="gameStarted = true"
                 >
                     Start
                 </div>
 
                 <div
-                    class="pixel-border animate w-60 mb-12"
+                    class="pixel-border animate w-3/4 lg:w-60 mb-12"
                     @click="howItWorksOpen = true"
                 >
                     How it works
                 </div>
 
                 <div
-                    class="pixel-border animate w-60 mb-12"
+                    class="pixel-border animate w-3/4 lg:w-60 mb-12"
                     @click="creditsOpen = true"
                 >
                     Credits
@@ -337,14 +343,14 @@
             >
                 <div
                     @click="howItWorksOpen = false"
-                    class="absolute top-0 right-0 m-5 text-white hover:text-fluorescent-blue text-3xl cursor-pointer">
+                    class="absolute top-0 right-0 m-5 text-black lg:text-white hover:text-fluorescent-blue text-3xl cursor-pointer">
                     X
                 </div>
 
                 <div
                     x-show="howItWorksOpen === true"
                     x-transition
-                    class="pixel-border w-2/3 flex flex-col justify-center items-center p-5 text-center"
+                    class="pixel-border h-full lg:h-auto w-full lg:w-2/3 flex flex-col justify-center items-center p-5 text-center overflow-scroll"
                 >
                     <h2 class="text-xl text-fluorescent-blue mb-5">
                         How it works
@@ -377,14 +383,14 @@
             >
                 <div
                     @click="creditsOpen = false"
-                    class="absolute top-0 right-0 m-5 text-white hover:text-fluorescent-blue text-3xl cursor-pointer">
+                    class="absolute top-0 right-0 m-5 text-black lg:text-white hover:text-fluorescent-blue text-3xl cursor-pointer">
                     X
                 </div>
 
                 <div
                     x-show="creditsOpen === true"
                     x-transition
-                    class="pixel-border w-2/3 flex flex-col justify-center items-center p-5 text-center"
+                    class="pixel-border w-full h-full lg:h-auto lg:w-2/3 flex flex-col justify-center items-center p-5 text-center overflow-scroll"
                 >
                     <h2 class="text-xl text-fluorescent-blue mb-5">
                         Credits

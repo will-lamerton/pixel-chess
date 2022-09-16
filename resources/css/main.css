@@ -37,7 +37,6 @@ body {
 }
 
 h1 {
-    @apply text-5xl mb-12;
     color: rgb(0, 230, 229);
     text-shadow: 4px 4px 0 var(--phiox);
 }
@@ -113,7 +112,14 @@ h2 {
     --pixel-bg: #d1d1d1;
 }
 .pixel-border.smaller {
-    @apply text-center w-24 text-xs inline-block;
+    @apply text-center w-20 inline-block;
+	font-size: 10px;
+}
+
+@screen lg {
+	.pixel-border.smaller {
+		@apply text-xs w-24;
+	}
 }
 
 .highlight-white {
