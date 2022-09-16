@@ -3,6 +3,8 @@ import { Chess } from 'chess.js';
 import { OpeningBook } from './opening-book.js';
 self.outOfOpening = false;
 
+import { GenerateMoves } from './move_generation/move-generator.js';
+
 import { PieceTables } from './piece-tables.js';
 
 /**
@@ -387,6 +389,18 @@ onmessage = (e) => {
     self.openings = OpeningBook;
     self.pieceTables = PieceTables;
     self.currentMoveSet = null;
+
+    const start = performance.now();
+    self.GenerateMoves = GenerateMoves(
+        self.chess.board(),
+        self.chess.fen()
+    );
+    const stop = performance.now();
+
+    console.log(self.GenerateMoves);
+    console.log(self.chess.moves({ verbose: true }));
+
+    console.log(stop-start);
 
     self.pieces = {
         p: 100,
