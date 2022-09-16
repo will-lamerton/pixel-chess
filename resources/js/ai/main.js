@@ -404,8 +404,9 @@ onmessage = (e) => {
     self.currentMoveSet = moves;
     moves = orderMoves(moves);
 
-    // Reset current best move.
+    // Reset current best move and evaluation.
     let currentBestMove = undefined;
+    let currentBestScore = 0;
 
     // Check opening book if there are still openings that could be played.
     if (self.outOfOpening === false) {
@@ -453,7 +454,7 @@ onmessage = (e) => {
     // If we don't have a legal move by this point, the opening book has failed so we'll need to search
     // and evaluate.
     if (currentBestMove === undefined) {
-        let currentBestScore = -Infinity;
+        currentBestScore = -Infinity;
 
         for (let i=0; i<moves.length; i++) {
             self.chess.move(moves[i]);
@@ -474,5 +475,8 @@ onmessage = (e) => {
     }
 
     // Send best move back to the UI.
-    postMessage(currentBestMove);
+    postMessage({
+        bestMove: currentBestMove,
+        evaluation: currentBestScore,
+    });
 }

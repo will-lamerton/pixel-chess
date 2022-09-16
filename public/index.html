@@ -26,7 +26,62 @@
                 howItWorksOpen: false,
                 creditsOpen: false,
                 aiSettingsOpen: false,
+                showingEvaluationBar: true,
+                evaluation: {
+                    asNumber: 0,
+                    white: 50,
+                    black: 50,
+                }
             }"
+            x-init="$watch('$store.game.evaluation', value => {
+                let rawEvaluation = value;
+                let evaluationToDisplay = parseFloat((rawEvaluation/100).toFixed(1));
+                let roundedEvaluation = Math.round(rawEvaluation/10);
+
+                let playerWinning = (evaluationToDisplay > 0) ? false : true;
+
+                if ($store.game.playingAs === 'b' && evaluationToDisplay < 0) {
+                    evaluationToDisplay = -evaluationToDisplay;
+                }
+                else if ($store.game.playingAs === 'w' && evaluationToDisplay > 0) {
+                    evaluationToDisplay = -evaluationToDisplay;
+                }
+
+                evaluation = {
+                    asNumber: evaluationToDisplay,
+                    white: 50,
+                    black: 50
+                };
+
+                if (
+                    (playerWinning === true && $store.game.playingAs === 'w') ||
+                    (playerWinning === false && $store.game.playingAs === 'b')
+                ){
+                    evaluation.white+=roundedEvaluation;
+                    evaluation.black-=roundedEvaluation;
+                }
+                else if (
+                    (playerWinning === true && $store.game.playingAs === 'b') ||
+                    (playerWinning === false && $store.game.playingAs === 'w')
+                ) {
+                    evaluation.white-=roundedEvaluation;
+                    evaluation.black+=roundedEvaluation;
+                }
+
+                if (evaluation.white > 100) {
+                    evaluation.white = 100;
+                }
+                else if (evaluation.white < 0) {
+                    evaluation.white = 0;
+                }
+
+                if (evaluation.black > 100) {
+                    evaluation.black = 100;
+                }
+                else if (evaluation.black < 0) {
+                    evaluation.black = 0;
+                }
+            })"
             class="w-screen h-screen flex items-center justify-center screen"
         >
             <section
@@ -34,6 +89,27 @@
                 x-show="gameStarted === true"
                 x-transition
             >
+                <div
+                    x-show="showingEvaluationBar === true"
+                    x-transition
+                    class="w-screen lg:w-104 lg:ml-64 flex flex-col items-center justify-center lg:mb-5 p-5 lg:p-0"
+                >
+                    <div
+                        x-text="evaluation.asNumber"
+                        class="text-white text-xs mb-2"
+                    ></div>
+
+                    <div class="w-full flex flex-row">
+                        <div
+                            class="bg-fluorescent-blue h-3 transition-all duration-200"
+                            :style="{ width: `${evaluation.white}%` }"
+                        ></div>
+                        <div
+                            class="bg-phiox h-3 transition-all duration-200"
+                            :style="{ width: `${evaluation.black}%` }"
+                        ></div>
+                    </div>
+                </div>
 
                 <div class="flex flex-row items-center justify-center">
                     <div class="hidden w-64 lg:flex flex-col items-end">
@@ -232,6 +308,17 @@
                         x-text="(Math.round($store.game.ai.allocatedSearchTime / 1000)) + ' seconds'"
                         class="mb-10 text-xs text-phiox"
                     ></div>
+
+                    <h3 class="text-sm mb-3">
+                        Show Evaluation?
+                    </h3>
+
+                    <input
+                        x-model="showingEvaluationBar"
+                        type="checkbox"
+                        class="mb-10"
+                        value="showingEvaluationBar"
+                    />
 
                     <div
                         class="pixel-border animate smaller"

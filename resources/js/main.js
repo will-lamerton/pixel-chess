@@ -146,7 +146,10 @@ class Game {
             window.Alpine.store('game').thinking = false;
 
             // Make the move the engine chose.
-            let move = window.game.chess.move(e.data);
+            let move = window.game.chess.move(e.data.bestMove);
+
+            // Get the evaluation as we'll store this for the UI.
+            window.Alpine.store('game').evaluation = e.data.evaluation;
 
             // If capture, we need to update the UI.
             window.game.logCapture(move);
@@ -205,6 +208,7 @@ class Game {
         // If the game hasn't started and we flip, we'll get the AI to play a move as white.
         if (window.game.moves === 0) {
             window.game.playingAs = (window.game.chess.turn() === 'w') ? 'b' : 'w';
+            window.Alpine.store('game').playingAs = window.game.playingAs;
 
             // Post message to engine.
             window.game.ai.postMessage({
@@ -217,7 +221,8 @@ class Game {
 
             // Recieve message back from engine.
             window.game.ai.onmessage = (e) => {
-                window.game.chess.move(e.data);
+                window.game.chess.move(e.data.bestMove);
+                window.Alpine.store('game').evaluation = e.data.evaluation;
                 window.game.board.position(window.game.chess.fen());
                 window.game.update();
             }
@@ -287,6 +292,7 @@ class Game {
 
         window.game.moves = 0;
         window.Alpine.store('game').moves = 0;
+        window.Alpine.store('game').evaluation = 0;
         window.Alpine.store('game').captures = {
             w: {
                 p: 0,
@@ -325,6 +331,8 @@ window.Alpine = Alpine;
 Alpine.store('game', {
     moves: window.game.moves,
     thinking: false,
+    evaluation: 0,
+    playingAs: window.game.playingAs,
 
     captures: {
         w: {
