@@ -95,7 +95,7 @@ This project was written in 2-weeks and approached having never written a Chess 
 ### Speed
 The biggest weakness at the moment is that the engine is particularly slow. 2 ply is the deepest the engine can search whilst keeping gameplay fast for the user. More optimisations could take place such as better move ordering & iterative deepening but the biggest issue is how legal moves are generated.
 
-Although the Chess.js framework is fantastic and really sped up the development of this project, it takes roughly `1ms` to generate all the legal moves for a given position. This, although sounding fast is too slow for when the engine is searching at larger depths with hundreds of thousands of positions, each one needing legal moves generated.
+Although the Chess.js framework is fantastic and really sped up the development of this project, it takes roughly `1ms`-`4ms` to generate all the legal moves for a given position. This, although sounding fast is too slow for when the engine is searching at larger depths with hundreds of thousands of positions, each one needing legal moves generated.
 
 Having such a low cap on depth obviously limits the AI, mostly in the endgame where it simply cannot see far enough ahead to checkmate opponents even in winning positions for the engine often ending the game in a draw.
 
