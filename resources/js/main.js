@@ -309,7 +309,7 @@ class Game {
         window.Alpine.store('game').insufficientMaterial = false;
 
         window.Alpine.store('game').playingAs = 'w';
-        window.game.lastPlayerMove = undefined;
+        window.Alpine.store('game').thinking = false;
     }
 }
 
