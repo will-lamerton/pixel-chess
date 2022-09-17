@@ -25,10 +25,6 @@ class Game {
 
         // Create the board.
         this.board = Chessboard('board', this.config);
-
-        // Setup variables...
-        this.moves = 0;
-        this.playingAs = 'w';
     }
 
     /**
@@ -38,11 +34,10 @@ class Game {
      */
     update(fen = undefined) {
         // Add one to the move counter and store for the front end.
-        window.game.moves++;
         window.Alpine.store('game').moves++;
 
         // Update the board based on colour...
-        if (window.game.playingAs === 'w' && window.game.chess.turn() !== 'w') {
+        if (window.Alpine.store('game').playingAs === 'w' && window.game.chess.turn() !== 'w') {
             window.game.board = Chessboard(
                 'board',
                 {
@@ -54,7 +49,7 @@ class Game {
                 }
             );
         }
-        else if (window.game.playingAs === 'b' && window.game.chess.turn() !== 'b') {
+        else if (window.Alpine.store('game').playingAs === 'b' && window.game.chess.turn() !== 'b') {
             window.game.board = Chessboard(
                 'board',
                 {
@@ -135,7 +130,7 @@ class Game {
         window.game.ai.postMessage({
             position: window.game.chess.fen(),
             lastPlayerMove: (piece.substring(1) === 'P') ? target : piece.substring(1).toUpperCase()+target,
-            numberOfMoves: window.game.moves,
+            numberOfMoves: window.Alpine.store('game').moves,
             allocatedSearchTime: window.Alpine.store('game').ai.allocatedSearchTime,
             searchDepth: window.Alpine.store('game').ai.searchDepth
         });
@@ -168,7 +163,7 @@ class Game {
                         if (
                             board[rank][square]['color'] === 'w' &&
                             board[rank][square]['type'] === 'k' &&
-                            window.game.playingAs === 'w'
+                            window.Alpine.store('game').playingAs === 'w'
                         ) {
                             document.getElementsByClassName(`square-${board[rank][square]['square']}`)[0].classList.add('highlight-check');
                         }
@@ -176,7 +171,7 @@ class Game {
                         else if (
                             board[rank][square]['color'] === 'b' &&
                             board[rank][square]['type'] === 'k' &&
-                            window.game.playingAs === 'b'
+                            window.Alpine.store('game').playingAs === 'b'
                         ) {
                             document.getElementsByClassName(`square-${board[rank][square]['square']}`)[0].classList.add('highlight-check');
                         }
@@ -206,15 +201,14 @@ class Game {
         window.game.board.orientation('flip');
 
         // If the game hasn't started and we flip, we'll get the AI to play a move as white.
-        if (window.game.moves === 0) {
-            window.game.playingAs = (window.game.chess.turn() === 'w') ? 'b' : 'w';
-            window.Alpine.store('game').playingAs = window.game.playingAs;
+        if (window.Alpine.store('game').moves === 0) {
+            window.Alpine.store('game').playingAs = (window.game.chess.turn() === 'w') ? 'b' : 'w';
 
             // Post message to engine.
             window.game.ai.postMessage({
                 originalPosition: window.game.chess.fen(),
                 lastPlayerMove: undefined,
-                numberOfMoves: window.game.moves,
+                numberOfMoves: window.Alpine.store('game').moves,
                 allocatedSearchTime: window.Alpine.store('game').ai.allocatedSearchTime,
                 searchDepth: window.Alpine.store('game').ai.searchDepth,
             });
@@ -290,7 +284,6 @@ class Game {
 
         window.game.chess.reset();
 
-        window.game.moves = 0;
         window.Alpine.store('game').moves = 0;
         window.Alpine.store('game').evaluation = 0;
         window.Alpine.store('game').captures = {
@@ -315,7 +308,7 @@ class Game {
         window.Alpine.store('game').inThreefoldRepetition = false;
         window.Alpine.store('game').insufficientMaterial = false;
 
-        window.game.playingAs = 'w';
+        window.Alpine.store('game').playingAs = 'w';
         window.game.lastPlayerMove = undefined;
     }
 }
@@ -329,10 +322,10 @@ window.Alpine = Alpine;
 
 // Create a store so that the UI can interface with the engine and game code.
 Alpine.store('game', {
-    moves: window.game.moves,
+    moves: 0,
     thinking: false,
     evaluation: 0,
-    playingAs: window.game.playingAs,
+    playingAs: 'w',
 
     captures: {
         w: {
